@@ -7,9 +7,29 @@ let editingId = null;
 let deletedStack = [];
 let currentPage = 1;
 
+// ★ 操作ログ
+let operationLog = [];
+function saveLog() {
+  localStorage.setItem("operationLogV2", JSON.stringify(operationLog));
+}
+function loadLog() {
+  const stored = localStorage.getItem("operationLogV2");
+  if (stored) operationLog = JSON.parse(stored);
+}
+function addLog(msg) {
+  const now = new Date();
+  const timestamp = now.toLocaleString('ja-JP', { hour12: false });
+  operationLog.unshift(`[${timestamp}] ${msg}`);
+  // 1000件程度で古いログを削除
+  if (operationLog.length > 1000) operationLog = operationLog.slice(0, 1000);
+  saveLog();
+}
+
+// --- 初期化 ---
 window.onload = function () {
   document.getElementById("date").value = new Date().toISOString().slice(0, 10);
   loadEntries();
+  loadLog();
   renderEntries();
   updateSummary();
   setupSortHeaders();
@@ -17,6 +37,7 @@ window.onload = function () {
   updatePagination();
 };
 
+// --- データ保存 ---
 function saveEntries() {
   localStorage.setItem("eventEntriesV2", JSON.stringify(entries));
 }
@@ -25,6 +46,7 @@ function loadEntries() {
   if (stored) entries = JSON.parse(stored);
 }
 
+// --- フィルター ---
 function setupFilter() {
   document.getElementById("filter-type").onchange = function () {
     filterType = this.value;
@@ -34,6 +56,8 @@ function setupFilter() {
     updatePagination();
   };
 }
+
+// --- 並び替え ---
 function setupSortHeaders() {
   document.querySelectorAll("#entry-table th[data-sort]").forEach(th => {
     th.onclick = function () {
@@ -50,6 +74,7 @@ function setupSortHeaders() {
   });
 }
 
+// --- 入力フォーム送信 ---
 document.getElementById("entry-form").onsubmit = function (e) {
   e.preventDefault();
   const username = document.getElementById("username").value.trim();
@@ -69,6 +94,7 @@ document.getElementById("entry-form").onsubmit = function (e) {
   if (editingId) {
     const idx = entries.findIndex(e => e.id === editingId);
     if (idx !== -1) {
+      addLog(`編集：${entries[idx].date} ${entries[idx].item} → ${date} ${item} by ${username}`);
       entries[idx] = { id: editingId, username, date, item, amount, type, memo };
     }
     editingId = null;
@@ -76,6 +102,7 @@ document.getElementById("entry-form").onsubmit = function (e) {
     document.getElementById("reset-btn").style.display = "none";
   } else {
     entries.push({ id: Date.now(), username, date, item, amount, type, memo });
+    addLog(`登録：${date} ${item} ${amount}円（${type === "income" ? "収入" : "支出"}）by ${username}`);
   }
   saveEntries();
   renderEntries();
@@ -85,17 +112,23 @@ document.getElementById("entry-form").onsubmit = function (e) {
   document.getElementById("date").value = new Date().toISOString().slice(0, 10);
 };
 
+// --- 編集キャンセル ---
 document.getElementById("reset-btn").onclick = function () {
   editingId = null;
   document.getElementById("entry-form").reset();
   document.getElementById("date").value = new Date().toISOString().slice(0, 10);
   document.getElementById("submit-btn").innerHTML = `<i class="fa-solid fa-plus"></i> 登録`;
   this.style.display = "none";
+  addLog("編集をキャンセル");
 };
 
+// --- 全削除 ---
 document.getElementById("delete-all").onclick = function () {
   if (confirm("全ての収支データを削除してよろしいですか？")) {
-    if (entries.length > 0) deletedStack.push([...entries]);
+    if (entries.length > 0) {
+      deletedStack.push([...entries]);
+      addLog("全データを削除");
+    }
     entries = [];
     saveEntries();
     renderEntries();
@@ -105,9 +138,11 @@ document.getElementById("delete-all").onclick = function () {
   }
 };
 
+// --- Undo削除 ---
 document.getElementById("undo-btn").onclick = function () {
   if (deletedStack.length > 0) {
     entries = deletedStack.pop();
+    addLog("削除を元に戻した（Undo）");
     saveEntries();
     renderEntries();
     updateSummary();
@@ -118,6 +153,7 @@ document.getElementById("undo-btn").onclick = function () {
   }
 };
 
+// --- CSVダウンロード ---
 document.getElementById("download-csv").onclick = function () {
   if (entries.length === 0) return alert("データがありません。");
   const header = ["日付", "入力者", "項目名", "金額", "種別", "メモ"];
@@ -129,7 +165,6 @@ document.getElementById("download-csv").onclick = function () {
       .map(row => row.map(cell => `"${(cell+"").replace(/"/g, '""')}"`).join(","))
       .join("\r\n");
 
-  // BOM追加で文字化け防止
   const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
   const blob = new Blob([bom, csvContent], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
@@ -138,8 +173,11 @@ document.getElementById("download-csv").onclick = function () {
   a.download = `収支管理_${new Date().toISOString().slice(0, 10)}.csv`;
   a.click();
   URL.revokeObjectURL(url);
+
+  addLog("CSVダウンロード");
 };
 
+// --- CSV取込 ---
 document.getElementById("upload-csv-btn").onclick = function () {
   document.getElementById("upload-csv").click();
 };
@@ -170,11 +208,13 @@ document.getElementById("upload-csv").onchange = function (e) {
     updateSummary();
     updatePagination();
     document.getElementById("upload-csv").value = "";
+    addLog("CSV取込");
     alert("CSVの取込が完了しました。");
   };
   reader.readAsText(file);
 };
 
+// --- テーブル描画 ---
 function renderEntries() {
   const tbody = document.querySelector("#entry-table tbody");
   tbody.innerHTML = "";
@@ -233,11 +273,13 @@ function renderEntries() {
       document.getElementById("submit-btn").innerHTML = `<i class="fa-solid fa-check"></i> 更新`;
       document.getElementById("reset-btn").style.display = "";
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      addLog(`編集モード：${entry.date} ${entry.item} by ${entry.username}`);
     };
     tr.querySelector(".delete-btn").onclick = () => {
       if (confirm("このデータを削除してよろしいですか？")) {
         deletedStack.push([entry]);
         entries = entries.filter(e => e.id !== entry.id);
+        addLog(`削除：${entry.date} ${entry.item} by ${entry.username}`);
         saveEntries();
         renderEntries();
         updateSummary();
@@ -249,6 +291,7 @@ function renderEntries() {
   }
 }
 
+// --- ページネーション ---
 function updatePagination() {
   const filtered = entries.filter(e => {
     if (filterType === "all") return true;
@@ -272,6 +315,7 @@ function updatePagination() {
   }
 }
 
+// --- 合計欄 ---
 function updateSummary() {
   let filtered = entries.filter(e => {
     if (filterType === "all") return true;
@@ -285,6 +329,7 @@ function updateSummary() {
   document.getElementById("balance").textContent = `差引残高: ${balance.toLocaleString()}円`;
 }
 
+// --- HTMLエスケープ ---
 function escapeHtml(text) {
   if (!text) return "";
   return text
@@ -294,3 +339,28 @@ function escapeHtml(text) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 }
+
+// --- 操作ログの参照機能 ---
+document.getElementById("show-log-btn").onclick = function () {
+  const modal = document.getElementById("log-modal");
+  const logList = document.getElementById("log-list");
+  logList.innerHTML = "";
+  if (operationLog.length === 0) {
+    logList.innerHTML = "<li>操作履歴はありません。</li>";
+  } else {
+    operationLog.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = item;
+      logList.appendChild(li);
+    });
+  }
+  modal.style.display = "flex";
+};
+
+document.getElementById("close-log-modal").onclick = function () {
+  document.getElementById("log-modal").style.display = "none";
+};
+// モーダル外クリックで閉じる
+document.getElementById("log-modal").onclick = function (e) {
+  if (e.target === this) this.style.display = "none";
+};

@@ -6,7 +6,6 @@
   <title>文化祭イベント収支管理</title>
   <!-- BIZ UD明朝（教科書体近似） -->
   <link href="https://fonts.googleapis.com/css2?family=BIZ+UDMincho:wght@400;700&display=swap" rel="stylesheet">
-  <!-- FontAwesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -98,8 +97,19 @@
         <button id="upload-csv-btn"><i class="fa-solid fa-upload"></i> CSV取込</button>
         <button id="delete-all"><i class="fa-solid fa-trash"></i> 全削除</button>
         <button id="undo-btn" disabled><i class="fa-solid fa-undo"></i> 直前の削除を元に戻す</button>
+        <button id="show-log-btn"><i class="fa-solid fa-list"></i> 操作ログを参照</button>
       </div>
     </section>
+
+    <!-- 操作ログモーダル -->
+    <div id="log-modal" class="modal" style="display:none;">
+      <div class="modal-content">
+        <span id="close-log-modal" class="close">&times;</span>
+        <h3>操作ログ</h3>
+        <ul id="log-list"></ul>
+      </div>
+    </div>
+
   </main>
   <footer>
     <small>&copy; 2025 文化祭イベント収支管理システム</small>

@@ -1,32 +1,36 @@
 body {
   font-family: 'BIZ UD明朝', 'Yu Kyokasho', 'YuKyokasho', '游教科書体', 'Yu Mincho', serif;
   margin: 0;
-  background: #fffdf6;
-  color: #333;
+  background: #f7fbff;
+  color: #222;
 }
+
 header {
-  background: linear-gradient(90deg, #ffda77 0%, #8ac926 100%);
+  background: linear-gradient(90deg, #7fd7fa 0%, #ffffff 100%);
   padding: 1.2em 0 0.7em 0;
   text-align: center;
+  box-shadow: 0 2px 8px #b5e3fa55;
 }
 header h1 {
   margin: 0;
   font-size: 2.1em;
-  color: #222;
+  color: #1877cc;
   letter-spacing: 0.06em;
   text-shadow: 1px 1px 0 #fff;
 }
+
+/* 入力フォーム */
 .form-section {
-  background: #fffbe6;
-  border-radius: 16px;
-  box-shadow: 0 2px 8px #ffd16644;
-  max-width: 580px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px #b2ebfa22;
+  max-width: 600px;
   margin: 2em auto 1em auto;
   padding: 1.2em 1em 1.6em 1em;
 }
 .form-section h2 {
   margin-top: 0;
-  color: #ff7f51;
+  color: #21a1e7;
   font-weight: bold;
 }
 #entry-form {
@@ -47,28 +51,30 @@ header h1 {
   margin-top: 0.3em;
   padding: 0.5em;
   border-radius: 8px;
-  border: 1px solid #eee;
+  border: 1px solid #e3f0fc;
   outline: none;
   transition: border 0.2s;
+  background: #f7fbff;
 }
 #entry-form input:focus, #entry-form select:focus {
-  border: 1.5px solid #8ac926;
+  border: 1.5px solid #21a1e7;
 }
 #entry-form button {
   margin-top: 1.3em;
   padding: 0.7em 1.5em;
   font-size: 1em;
-  background: linear-gradient(90deg, #56cfe1, #fb6f92);
-  color: #fff;
+  background: linear-gradient(90deg, #7fd7fa, #b4e0fb);
+  color: #1877cc;
   border: none;
-  border-radius: 24px;
+  border-radius: 20px;
   font-weight: bold;
   cursor: pointer;
   transition: background 0.2s;
-  box-shadow: 0 2px 4px #fa7e1e18;
+  box-shadow: 0 2px 4px #b2ebfa24;
 }
 #entry-form button:hover {
-  background: linear-gradient(90deg, #fb6f92, #56cfe1);
+  background: linear-gradient(90deg, #b4e0fb, #7fd7fa);
+  color: #004d99;
 }
 .filter-section {
   text-align: right;
@@ -78,8 +84,8 @@ header h1 {
 .filter-section select {
   padding: 0.4em 1em;
   border-radius: 12px;
-  border: 1px solid #ffda77;
-  background: #fffbe6;
+  border: 1px solid #b4e0fb;
+  background: #f7fbff;
   font-size: 1em;
 }
 .table-scroll {
@@ -93,23 +99,23 @@ header h1 {
   margin-bottom: 0.7em;
 }
 #entry-table th, #entry-table td {
-  border: 1px solid #ffd166;
+  border: 1px solid #c9e8f6;
   padding: 0.7em 0.5em;
   text-align: center;
   font-size: 1em;
 }
 #entry-table th {
-  background: #ffe066;
-  color: #555;
+  background: #e7f7fd;
+  color: #1877cc;
   position: relative;
   cursor: pointer;
   user-select: none;
 }
 #entry-table th:hover {
-  background: #ffb703;
+  background: #b4e0fb;
 }
 #entry-table tr:nth-child(even) {
-  background: #fffbe6;
+  background: #f2f9fd;
 }
 #entry-table .edit-btn, #entry-table .delete-btn {
   padding: 0.4em 0.9em;
@@ -121,18 +127,20 @@ header h1 {
   transition: background 0.1s;
 }
 #entry-table .edit-btn {
-  background: #8ac926;
-  color: #fff;
+  background: #7fd7fa;
+  color: #1877cc;
 }
 #entry-table .edit-btn:hover {
-  background: #56cfe1;
-}
-#entry-table .delete-btn {
-  background: #fb6f92;
+  background: #21a1e7;
   color: #fff;
 }
+#entry-table .delete-btn {
+  background: #e4b3b3;
+  color: #a30000;
+}
 #entry-table .delete-btn:hover {
-  background: #ff7f51;
+  background: #c9e8f6;
+  color: #fff;
 }
 .summary {
   display: flex;
@@ -147,11 +155,13 @@ header h1 {
   padding: 0.6em 1.3em;
   border-radius: 20px;
   font-size: 1.13em;
-  box-shadow: 0 1.5px 4px #ffd16633;
+  box-shadow: 0 1.5px 4px #b2ebfa33;
+  background: #e7f7fd;
+  color: #1877cc;
 }
-.summary-badge.income { background: #56cfe1; color: #fff; }
-.summary-badge.expense { background: #fb6f92; color: #fff; }
-.summary-badge.balance { background: #ffe066; color: #333; }
+.summary-badge.income { background: #7fd7fa; color: #004d99; }
+.summary-badge.expense { background: #e4b3b3; color: #a30000; }
+.summary-badge.balance { background: #f2f9fd; color: #222; }
 .utility-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -161,23 +171,23 @@ header h1 {
 }
 .utility-buttons button {
   padding: 0.7em 1.4em;
-  background: #ffda77;
+  background: #b4e0fb;
   border: none;
   border-radius: 20px;
   font-weight: bold;
   font-size: 1em;
-  color: #333;
+  color: #1877cc;
   cursor: pointer;
   transition: background 0.2s;
-  box-shadow: 0 1.5px 4px #ffd16655;
+  box-shadow: 0 1.5px 4px #b2ebfa33;
 }
 .utility-buttons button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 .utility-buttons button:hover:not(:disabled) {
-  background: #8ac926;
-  color: #fff;
+  background: #7fd7fa;
+  color: #004d99;
 }
 .utility-buttons input[type="file"] {
   display: none;
@@ -191,28 +201,28 @@ header h1 {
   margin: 0 0.15em;
   border-radius: 8px;
   border: none;
-  background: #ffe066;
-  color: #555;
+  background: #e7f7fd;
+  color: #1877cc;
   font-weight: bold;
   cursor: pointer;
   font-size: 1em;
 }
 .pagination button.active,
 .pagination button:hover {
-  background: #ff7f51;
+  background: #7fd7fa;
   color: #fff;
 }
 footer {
   text-align: center;
   padding: 1em 0;
-  background: #f4f4f4;
-  color: #999;
+  background: #e3f0fc;
+  color: #6c7a89;
   margin-top: 2.2em;
   font-size: 0.92em;
 }
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .form-section, .filter-section, .list-section {
-    max-width: 98vw;
+    max-width: 99vw;
     margin-left: auto;
     margin-right: auto;
     padding: 1em 0.2em;

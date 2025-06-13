@@ -25,7 +25,6 @@ function loadEntries() {
   if (stored) entries = JSON.parse(stored);
 }
 
-// フィルターセットアップ
 function setupFilter() {
   document.getElementById("filter-type").onchange = function () {
     filterType = this.value;
@@ -35,8 +34,6 @@ function setupFilter() {
     updatePagination();
   };
 }
-
-// 並び替えセットアップ
 function setupSortHeaders() {
   document.querySelectorAll("#entry-table th[data-sort]").forEach(th => {
     th.onclick = function () {
@@ -53,7 +50,6 @@ function setupSortHeaders() {
   });
 }
 
-// 入力フォーム送信
 document.getElementById("entry-form").onsubmit = function (e) {
   e.preventDefault();
   const username = document.getElementById("username").value.trim();
@@ -89,7 +85,6 @@ document.getElementById("entry-form").onsubmit = function (e) {
   document.getElementById("date").value = new Date().toISOString().slice(0, 10);
 };
 
-// 編集キャンセル
 document.getElementById("reset-btn").onclick = function () {
   editingId = null;
   document.getElementById("entry-form").reset();
@@ -98,7 +93,6 @@ document.getElementById("reset-btn").onclick = function () {
   this.style.display = "none";
 };
 
-// 削除一括
 document.getElementById("delete-all").onclick = function () {
   if (confirm("全ての収支データを削除してよろしいですか？")) {
     if (entries.length > 0) deletedStack.push([...entries]);
@@ -111,7 +105,6 @@ document.getElementById("delete-all").onclick = function () {
   }
 };
 
-// Undo削除
 document.getElementById("undo-btn").onclick = function () {
   if (deletedStack.length > 0) {
     entries = deletedStack.pop();
@@ -125,7 +118,6 @@ document.getElementById("undo-btn").onclick = function () {
   }
 };
 
-// CSVダウンロード
 document.getElementById("download-csv").onclick = function () {
   if (entries.length === 0) return alert("データがありません。");
   const header = ["日付", "入力者", "項目名", "金額", "種別", "メモ"];
@@ -135,8 +127,11 @@ document.getElementById("download-csv").onclick = function () {
   const csvContent =
     [header, ...rows]
       .map(row => row.map(cell => `"${(cell+"").replace(/"/g, '""')}"`).join(","))
-      .join("\n");
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      .join("\r\n");
+
+  // BOM追加で文字化け防止
+  const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+  const blob = new Blob([bom, csvContent], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -145,7 +140,6 @@ document.getElementById("download-csv").onclick = function () {
   URL.revokeObjectURL(url);
 };
 
-// CSV取込
 document.getElementById("upload-csv-btn").onclick = function () {
   document.getElementById("upload-csv").click();
 };
@@ -181,7 +175,6 @@ document.getElementById("upload-csv").onchange = function (e) {
   reader.readAsText(file);
 };
 
-// テーブル描画（フィルタ・並び替え・ページネーション対応）
 function renderEntries() {
   const tbody = document.querySelector("#entry-table tbody");
   tbody.innerHTML = "";
@@ -200,7 +193,6 @@ function renderEntries() {
     return 0;
   });
 
-  // ページング
   const totalPage = Math.ceil(filtered.length / ENTRIES_PER_PAGE) || 1;
   if (currentPage > totalPage) currentPage = totalPage;
   const startIdx = (currentPage - 1) * ENTRIES_PER_PAGE;
@@ -230,7 +222,6 @@ function renderEntries() {
         <button class="delete-btn"><i class="fa-solid fa-trash"></i> 削除</button>
       </td>
     `;
-    // 編集
     tr.querySelector(".edit-btn").onclick = () => {
       editingId = entry.id;
       document.getElementById("username").value = entry.username;
@@ -243,7 +234,6 @@ function renderEntries() {
       document.getElementById("reset-btn").style.display = "";
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
-    // 削除
     tr.querySelector(".delete-btn").onclick = () => {
       if (confirm("このデータを削除してよろしいですか？")) {
         deletedStack.push([entry]);
@@ -259,7 +249,6 @@ function renderEntries() {
   }
 }
 
-// ページネーション描画
 function updatePagination() {
   const filtered = entries.filter(e => {
     if (filterType === "all") return true;
@@ -283,7 +272,6 @@ function updatePagination() {
   }
 }
 
-// 合計欄
 function updateSummary() {
   let filtered = entries.filter(e => {
     if (filterType === "all") return true;
@@ -297,7 +285,6 @@ function updateSummary() {
   document.getElementById("balance").textContent = `差引残高: ${balance.toLocaleString()}円`;
 }
 
-// HTMLエスケープ
 function escapeHtml(text) {
   if (!text) return "";
   return text

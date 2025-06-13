@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>文化祭イベント収支管理</title>
+  <!-- 教科書体Webフォント（BIZ UD明朝を近似使用） -->
+  <link href="https://fonts.googleapis.com/css2?family=BIZ+UDMincho:wght@400;700&display=swap" rel="stylesheet">
+  <!-- アイコンCDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1><i class="fa-solid fa-sparkles"></i> 文化祭イベント収支管理</h1>
+  </header>
+
+  <main>
+    <section class="form-section">
+      <h2>収支項目の登録</h2>
+      <form id="entry-form" autocomplete="off">
+        <label>
+          入力者名
+          <input type="text" id="username" maxlength="20" placeholder="名前を入力" required />
+        </label>
+        <label>
+          日付
+          <input type="date" id="date" required />
+        </label>
+        <label>
+          項目名
+          <input type="text" id="item" maxlength="50" placeholder="例: 飲料販売" required />
+        </label>
+        <label>
+          金額
+          <input type="number" id="amount" min="0" step="1" placeholder="0" required />
+        </label>
+        <label>
+          種別
+          <select id="type" required>
+            <option value="">選択してください</option>
+            <option value="income">収入</option>
+            <option value="expense">支出</option>
+          </select>
+        </label>
+        <label>
+          メモ
+          <input type="text" id="memo" maxlength="50" placeholder="任意" />
+        </label>
+        <button type="submit" id="submit-btn">
+          <i class="fa-solid fa-plus"></i> 登録
+        </button>
+        <button type="button" id="reset-btn" style="display:none;">
+          <i class="fa-solid fa-rotate-left"></i> キャンセル
+        </button>
+      </form>
+    </section>
+
+    <section class="filter-section">
+      <label>
+        表示フィルター
+        <select id="filter-type">
+          <option value="all">全て</option>
+          <option value="income">収入のみ</option>
+          <option value="expense">支出のみ</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="list-section">
+      <h2>収支一覧</h2>
+      <div class="table-scroll">
+        <table id="entry-table">
+          <thead>
+            <tr>
+              <th data-sort="date">日付 <i class="fa-solid fa-sort"></i></th>
+              <th data-sort="username">入力者 <i class="fa-solid fa-sort"></i></th>
+              <th data-sort="item">項目名 <i class="fa-solid fa-sort"></i></th>
+              <th data-sort="amount">金額 <i class="fa-solid fa-sort"></i></th>
+              <th data-sort="type">種別 <i class="fa-solid fa-sort"></i></th>
+              <th data-sort="memo">メモ <i class="fa-solid fa-sort"></i></th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- JSで行を挿入 -->
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination" id="pagination"></div>
+
+      <div class="summary">
+        <span id="total-income" class="summary-badge income">収入合計: 0円</span>
+        <span id="total-expense" class="summary-badge expense">支出合計: 0円</span>
+        <span id="balance" class="summary-badge balance">差引残高: 0円</span>
+      </div>
+
+      <div class="utility-buttons">
+        <button id="download-csv"><i class="fa-solid fa-download"></i> CSVダウンロード</button>
+        <input type="file" id="upload-csv" accept=".csv" style="display:none;" />
+        <button id="upload-csv-btn"><i class="fa-solid fa-upload"></i> CSV取込</button>
+        <button id="delete-all"><i class="fa-solid fa-trash"></i> 全削除</button>
+        <button id="undo-btn" disabled><i class="fa-solid fa-undo"></i> 直前の削除を元に戻す</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <small>&copy; 2025 文化祭イベント収支管理システム</small>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -7,26 +7,11 @@
 </head>
 <body>
 
-  <h1>🐎 卒論進捗ダービー</h1>
-  <p class="subtitle">本日のレース結果（順位は自動更新）</p>
+<h1>🐎 卒論進捗ダービー</h1>
+<p class="subtitle">文字数に応じて馬が進みます</p>
 
-  <div id="race"></div>
+<div id="track"></div>
 
-  <hr>
-
-  <h2>✏️ 今日の更新</h2>
-
-  <div class="form">
-    <input id="name" placeholder="名前（例：Aさん）">
-    <input id="pages" type="number" placeholder="ページ数">
-    <input id="chars" type="number" placeholder="文字数">
-    <button onclick="save()">保存してコミット</button>
-  </div>
-
-  <p class="note">
-    ※ 保存すると GitHub 上の data.json が更新されます（遊び用）
-  </p>
-
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

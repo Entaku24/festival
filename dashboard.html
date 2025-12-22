@@ -2,21 +2,46 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>文字数の推移</title>
+  <title>📊 進捗ダッシュボード</title>
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- 注釈用 -->
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.4.0"></script>
 
-  <link rel="stylesheet" href="dashboard.css">
+  <style>
+    body {
+      font-family: "Yu Gothic", sans-serif;
+      background: #f5f3ee;
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 8px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 40px 40px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 22px;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 420px !important;
+    }
+  </style>
 </head>
+
 <body>
 
-  <div class="card">
-    <h2>文字数の推移</h2>
-
-    <canvas id="charsLine"></canvas>
+  <div class="container">
+    <h1>文字数の推移（累積）</h1>
+    <canvas id="progressLine"></canvas>
   </div>
 
   <script src="dashboard.js"></script>

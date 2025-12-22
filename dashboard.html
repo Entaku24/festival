@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>📊 卒論進捗ダッシュボード</title>
+  <title>📊 卒論進捗ダッシュボード（文字数）</title>
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -11,18 +11,26 @@
 </head>
 <body>
 
-<h1>📊 卒論進捗ダッシュボード</h1>
+  <h1>📊 卒論進捗ダッシュボード</h1>
+  <p class="subtitle">文字数ベースで進捗を可視化します</p>
 
-<section>
-  <h2>① 本日のページ数（積み上げ棒グラフ）</h2>
-  <canvas id="barToday"></canvas>
-</section>
+  <!-- ダービーに戻る -->
+  <p style="text-align:center; margin-bottom:30px;">
+    ← <a href="index.html">ダービー画面に戻る</a>
+  </p>
 
-<section>
-  <h2>② 累積ページ数の推移（折れ線グラフ）</h2>
-  <canvas id="lineCumulative"></canvas>
-</section>
+  <!-- ① 今日の文字数（棒グラフ） -->
+  <section>
+    <h2>① 本日の文字数（人別）</h2>
+    <canvas id="barTodayChars"></canvas>
+  </section>
 
-<script src="dashboard.js"></script>
+  <!-- ② 累積文字数（折れ線） -->
+  <section style="margin-top:50px;">
+    <h2>② 累積文字数の推移（日別）</h2>
+    <canvas id="lineCumulativeChars"></canvas>
+  </section>
+
+  <script src="dashboard.js"></script>
 </body>
 </html>

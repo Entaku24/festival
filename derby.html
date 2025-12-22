@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>🐎 卒論進捗ダービー（アニメーション）</title>
+
+<style>
+body {
+  font-family: "Yu Gothic", sans-serif;
+  background: #f4f1ea;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.lane {
+  background: #fff;
+  margin: 25px auto;
+  padding: 15px;
+  max-width: 900px;
+  border-radius: 12px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+.info {
+  margin-bottom: 8px;
+}
+
+.track {
+  position: relative;
+  height: 50px;
+  background: linear-gradient(to right, #ddd, #eee);
+  border-radius: 25px;
+  overflow: hidden;
+}
+
+.horse {
+  position: absolute;
+  left: 0;
+  top: 8px;
+  font-size: 28px;
+  transition: left 2s cubic-bezier(.4,1.4,.6,1);
+}
+</style>
+</head>
+
+<body>
+
+<h1>🐎 卒論進捗ダービー</h1>
+
+<div id="race"></div>
+
+<script>
+fetch("data.json")
+  .then(res => res.json())
+  .then(data => startRace(data));
+
+function startRace(records) {
+
+  // 最新日だけ使う
+  const latestDate = records
+    .map(r => r.date)
+    .sort()
+    .pop();
+
+  const racers = records
+    .filter(r => r.date === latestDate)
+    .sort((a,b) => b.chars - a.chars);
+
+  const maxChars = Math.max(...racers.map(r => r.chars));
+  const race = document.getElementById("race");
+  race.innerHTML = "";
+
+  racers.forEach((r, i) => {
+
+    const lane = document.createElement("div");
+    lane.className = "lane";
+
+    lane.innerHTML = `
+      <div class="info">
+        🏁 ${i+1}位　<strong>${r.name}</strong>
+        ／ ${r.chars}字 ／ ${titleByChars(r.chars)}
+      </div>
+      <div class="track">
+        <div class="horse">🐎</div>
+      </div>
+    `;
+
+    race.appendChild(lane);
+
+    // 一度 left=0 で描画 → 少し待ってから移動
+    const horse = lane.querySelector(".horse");
+    const progress = Math.min(90, (r.chars / maxChars) * 90);
+
+    setTimeout(() => {
+      horse.style.left = progress + "%";
+    }, 200);
+  });
+}
+
+function titleByChars(chars) {
+  if (chars >= 30000) return "🏁 ゴール目前";
+  if (chars >= 20000) return "🔥 爆筆王";
+  if (chars >= 12000) return "🐢 堅実派ランナー";
+  return "🌱 構想中";
+}
+</script>
+
+</body>
+</html>

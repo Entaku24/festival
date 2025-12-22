@@ -9,39 +9,40 @@
 
   <style>
     body {
-      font-family: "Yu Gothic", sans-serif;
-      background: #f5f3ee;
       margin: 0;
-      padding: 40px 20px;
+      padding: 40px;
+      background: #f7f4ec;
+      font-family: "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
     }
 
-    .container {
+    .card {
       background: #fff;
-      border-radius: 8px;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       max-width: 1200px;
-      margin: 0 auto;
-      padding: 30px 40px 40px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin: auto;
     }
 
     h1 {
       text-align: center;
-      margin-bottom: 30px;
-      font-size: 22px;
+      margin-bottom: 24px;
     }
 
-    canvas {
-      width: 100% !important;
-      height: 420px !important;
+    .chart-wrap {
+      position: relative;
+      height: 500px;
     }
   </style>
 </head>
-
 <body>
 
-  <div class="container">
+  <div class="card">
     <h1>文字数の推移（累積）</h1>
-    <canvas id="progressLine"></canvas>
+    <div class="chart-wrap">
+      <!-- ★ id を chart に統一 -->
+      <canvas id="chart"></canvas>
+    </div>
   </div>
 
   <script src="dashboard.js"></script>

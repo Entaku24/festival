@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>📊 卒論進捗ダッシュボード</title>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>📊 卒論進捗ダッシュボード</h1>
+
+<section>
+  <h2>① 本日のページ数（積み上げ棒グラフ）</h2>
+  <canvas id="barToday"></canvas>
+</section>
+
+<section>
+  <h2>② 累積ページ数の推移（折れ線グラフ）</h2>
+  <canvas id="lineCumulative"></canvas>
+</section>
+
+<script src="dashboard.js"></script>
+</body>
+</html>

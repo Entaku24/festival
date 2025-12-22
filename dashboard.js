@@ -41,7 +41,7 @@ fetch("history.json")
           },
           title: {
             display: true,
-            text: "文字数の推移（累積）"
+            text: "文字数の推移"
           }
         },
         scales: {
@@ -54,7 +54,6 @@ fetch("history.json")
           y: {
             title: {
               display: true,
-              text: "累積文字数"
             }
           }
         }

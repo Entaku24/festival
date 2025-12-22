@@ -1,80 +1,44 @@
 fetch("data.json")
   .then(res => res.json())
-  .then(data => {
-    drawTodayCharBar(data);
-    drawCumulativeCharLine(data);
-  });
+  .then(data => drawDailyLine(data));
 
-/* =========================
-① 本日の文字数（棒グラフ）
-========================= */
-function drawTodayCharBar(data) {
-  const labels = [];
-  const values = [];
+function drawDailyLine(records) {
 
-  data.forEach(person => {
-    const latest = person.history[person.history.length - 1];
-    labels.push(person.name);
-    values.push(latest.chars);
-  });
-
-  new Chart(document.getElementById("barTodayChars"), {
-    type: "bar",
-    data: {
-      labels: labels,
-      datasets: [{
-        label: "文字数",
-        data: values,
-        backgroundColor: "rgba(255, 159, 64, 0.7)"
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: "文字数"
-          }
-        }
-      }
-    }
-  });
-}
-
-/* =========================
-② 累積文字数（折れ線）
-========================= */
-function drawCumulativeCharLine(data) {
-
-  // 全員の履歴から日付一覧を作る
+  // ① 日付一覧（昇順）
   const dates = Array.from(
-    new Set(
-      data.flatMap(p => p.history.map(h => h.date))
-    )
+    new Set(records.map(r => r.date))
   ).sort();
 
-  const datasets = data.map(person => {
+  // ② 人名一覧
+  const names = Array.from(
+    new Set(records.map(r => r.name))
+  );
+
+  // ③ 人ごとに日付→文字数を対応づけ
+  const datasets = names.map(name => {
+
     let lastChars = 0;
 
-    const charsByDate = dates.map(date => {
-      const record = person.history.find(h => h.date === date);
-      if (record) {
-        lastChars = record.chars;
+    const dataByDate = dates.map(date => {
+      const rec = records.find(
+        r => r.name === name && r.date === date
+      );
+      if (rec) {
+        lastChars = rec.chars;
       }
       return lastChars;
     });
 
     return {
-      label: person.name,
-      data: charsByDate,
-      fill: false,
-      tension: 0.3
+      label: name,
+      data: dataByDate,
+      tension: 0.3,
+      fill: false
     };
   });
 
-  new Chart(document.getElementById("lineCumulativeChars"), {
+  // ④ Chart.js
+  new Chart(document.getElementById("lineDaily"), {
     type: "line",
     data: {
       labels: dates,
@@ -82,12 +46,22 @@ function drawCumulativeCharLine(data) {
     },
     options: {
       responsive: true,
+      interaction: {
+        mode: "nearest",
+        intersect: false
+      },
       scales: {
         y: {
           beginAtZero: true,
           title: {
             display: true,
             text: "累積文字数"
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: "日付"
           }
         }
       }

@@ -2,24 +2,22 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>📊 卒論進捗ダッシュボード（文字数）</title>
+  <title>文字数の推移</title>
 
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <!-- 注釈用 -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.4.0"></script>
+
+  <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
 
-  <h1>📊 卒論進捗ダッシュボード</h1>
-  <p class="subtitle">縦長データ（名前×日付）から日ごとの推移を可視化</p>
+  <div class="card">
+    <h2>文字数の推移</h2>
 
-  <p style="text-align:center; margin-bottom:30px;">
-    ← <a href="index.html">ダービーに戻る</a>
-  </p>
-
-  <section>
-    <h2>📈 累積文字数の推移（日別・人別）</h2>
-    <canvas id="lineDaily"></canvas>
-  </section>
+    <canvas id="charsLine"></canvas>
+  </div>
 
   <script src="dashboard.js"></script>
 </body>

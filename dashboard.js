@@ -2,22 +2,36 @@ fetch("history.json")
   .then(res => res.json())
   .then(data => {
 
+    // 日付と名前を抽出
     const dates = [...new Set(data.map(d => d.date))].sort();
     const names = [...new Set(data.map(d => d.name))];
 
-    const datasets = names.map((name, i) => {
-      return {
-        label: name,
-        data: dates.map(date => {
-          const record = data.find(d => d.name === name && d.date === date);
-          return record ? record.chars : null;
-        }),
-        borderWidth: 3,
-        tension: 0.3
-      };
-    });
+    // 色（自動割当・順序固定）
+    const colors = [
+      "#4e79a7", "#e15759", "#f28e2b", "#edc948",
+      "#76b7b2", "#59a14f", "#af7aa1", "#ff9da7"
+    ];
 
-    const ctx = document.getElementById("chart").getContext("2d");
+    const datasets = names.map((name, i) => ({
+      label: name,
+      data: dates.map(date => {
+        const record = data.find(d => d.name === name && d.date === date);
+        return record ? record.chars : null;
+      }),
+      borderColor: colors[i % colors.length],
+      backgroundColor: colors[i % colors.length],
+      borderWidth: 3,
+      tension: 0.3,
+      spanGaps: true
+    }));
+
+    const canvas = document.getElementById("chart");
+    if (!canvas) {
+      console.error("canvas #chart が見つかりません");
+      return;
+    }
+
+    const ctx = canvas.getContext("2d");
 
     new Chart(ctx, {
       type: "line",
@@ -33,15 +47,11 @@ fetch("history.json")
             position: "bottom",
             labels: {
               boxWidth: 12,
-              padding: 16,
+              padding: 14,
               font: {
                 size: 12
               }
             }
-          },
-          title: {
-            display: true,
-            text: "文字数の推移（累積）"
           }
         },
         scales: {
@@ -55,9 +65,15 @@ fetch("history.json")
             title: {
               display: true,
               text: "累積文字数"
+            },
+            ticks: {
+              callback: value => value.toLocaleString()
             }
           }
         }
       }
     });
+  })
+  .catch(err => {
+    console.error("データ読み込みエラー", err);
   });

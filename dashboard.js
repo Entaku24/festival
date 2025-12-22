@@ -1,31 +1,31 @@
 fetch("data.json")
   .then(res => res.json())
   .then(data => {
-    drawTodayBar(data);
-    drawCumulativeLine(data);
+    drawTodayCharBar(data);
+    drawCumulativeCharLine(data);
   });
 
-/* ==========
-① 今日のページ数（積み上げ棒）
-========== */
-function drawTodayBar(data) {
+/* =========================
+① 本日の文字数（棒グラフ）
+========================= */
+function drawTodayCharBar(data) {
   const labels = [];
   const values = [];
 
   data.forEach(person => {
     const latest = person.history[person.history.length - 1];
     labels.push(person.name);
-    values.push(latest.pages);
+    values.push(latest.chars);
   });
 
-  new Chart(document.getElementById("barToday"), {
+  new Chart(document.getElementById("barTodayChars"), {
     type: "bar",
     data: {
       labels: labels,
       datasets: [{
-        label: "ページ数",
+        label: "文字数",
         data: values,
-        backgroundColor: "rgba(75, 135, 185, 0.7)"
+        backgroundColor: "rgba(255, 159, 64, 0.7)"
       }]
     },
     options: {
@@ -33,39 +33,48 @@ function drawTodayBar(data) {
       scales: {
         y: {
           beginAtZero: true,
-          title: { display: true, text: "ページ数" }
+          title: {
+            display: true,
+            text: "文字数"
+          }
         }
       }
     }
   });
 }
 
-/* ==========
-② 累積ページ数（折れ線）
-========== */
-function drawCumulativeLine(data) {
-  // 日付一覧を集める
-  const dates = Array.from(new Set(
-    data.flatMap(p => p.history.map(h => h.date))
-  )).sort();
+/* =========================
+② 累積文字数（折れ線）
+========================= */
+function drawCumulativeCharLine(data) {
+
+  // 全員の履歴から日付一覧を作る
+  const dates = Array.from(
+    new Set(
+      data.flatMap(p => p.history.map(h => h.date))
+    )
+  ).sort();
 
   const datasets = data.map(person => {
-    let last = 0;
-    const pagesByDate = dates.map(d => {
-      const hit = person.history.find(h => h.date === d);
-      if (hit) last = hit.pages;
-      return last;
+    let lastChars = 0;
+
+    const charsByDate = dates.map(date => {
+      const record = person.history.find(h => h.date === date);
+      if (record) {
+        lastChars = record.chars;
+      }
+      return lastChars;
     });
 
     return {
       label: person.name,
-      data: pagesByDate,
+      data: charsByDate,
       fill: false,
       tension: 0.3
     };
   });
 
-  new Chart(document.getElementById("lineCumulative"), {
+  new Chart(document.getElementById("lineCumulativeChars"), {
     type: "line",
     data: {
       labels: dates,
@@ -76,7 +85,10 @@ function drawCumulativeLine(data) {
       scales: {
         y: {
           beginAtZero: true,
-          title: { display: true, text: "累積ページ数" }
+          title: {
+            display: true,
+            text: "累積文字数"
+          }
         }
       }
     }

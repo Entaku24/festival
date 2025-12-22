@@ -4,31 +4,21 @@
   <meta charset="UTF-8">
   <title>📊 卒論進捗ダッシュボード（文字数）</title>
 
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <h1>📊 卒論進捗ダッシュボード</h1>
-  <p class="subtitle">文字数ベースで進捗を可視化します</p>
+  <p class="subtitle">縦長データ（名前×日付）から日ごとの推移を可視化</p>
 
-  <!-- ダービーに戻る -->
   <p style="text-align:center; margin-bottom:30px;">
-    ← <a href="index.html">ダービー画面に戻る</a>
+    ← <a href="index.html">ダービーに戻る</a>
   </p>
 
-  <!-- ① 今日の文字数（棒グラフ） -->
   <section>
-    <h2>① 本日の文字数（人別）</h2>
-    <canvas id="barTodayChars"></canvas>
-  </section>
-
-  <!-- ② 累積文字数（折れ線） -->
-  <section style="margin-top:50px;">
-    <h2>② 累積文字数の推移（日別）</h2>
-    <canvas id="lineCumulativeChars"></canvas>
+    <h2>📈 累積文字数の推移（日別・人別）</h2>
+    <canvas id="lineDaily"></canvas>
   </section>
 
   <script src="dashboard.js"></script>
